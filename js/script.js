@@ -4,8 +4,8 @@ var teams = [{
 	"upvotes" : 30,
 	"downvotes" : 3,
 	"photo": "images/hyd.png",
-	"latitude": "17.12345",
-	"longitude": "78.67891",
+	"latitude": "17.428635",
+	"longitude": "78.428322",
 	"voted": "no"
 },
 
@@ -40,12 +40,12 @@ var teams = [{
 },
 
 {
-	"name" : "Dehradun Cheetahs", 
+	"name" : "Bhopal Cheetahs", 
 	"upvotes" : 29,
 	"downvotes" : 4,
 	"photo": "images/deh.jpg",
-	"latitude": "30.56883",
-	"longitude": "78.993415",
+	"latitude": "23.247935",
+	"longitude": "77.403135",
 	"voted": "no"
 }];
 
@@ -75,17 +75,24 @@ function init() {
 	});
 
 	var map;
+    var zoomLevel = 5;
 	var bounds = new google.maps.LatLngBounds();
-	var marker_url = 'images/camera.png';
+    bounds.extend(new google.maps.LatLng(teams[0].latitude, teams[0].longitude)); 
+    var markerIcon = {
+        url: 'images/camera.png',
+        origin: new google.maps.Point(0, 0),
+  anchor: new google.maps.Point(32,65),
+  labelOrigin: new google.maps.Point(40,33)
+    }	
 	var mapOptions = {
-		mapTypeId: google.maps.MapTypeId.ROADMAP
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+        zoom: zoomLevel
 	};
 
     // Display a map on the page
-    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-    //map.setTilt(45);                       
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);  
+    map.fitBounds(bounds);                   
 
-    // Display multiple markers on a map
     var marker, i;
     var timesVoted = 0;
     var votingLimit = 3;
@@ -93,10 +100,9 @@ function init() {
     
     // Loop through our array of markers & place each one on the map  
     for( i = 0; i < teams.length; i++ ) {
-    	var position = new google.maps.LatLng(teams[i].latitude, teams[i].longitude);
-    	bounds.extend(position);
+    	var position = new google.maps.LatLng(teams[i].latitude, teams[i].longitude);    	
     	marker = new google.maps.Marker({
-    		icon: marker_url,
+    		icon: markerIcon,
     		position: position,
     		map: map,
     		label: teams[i].name + ', Upvotes: ' + teams[i].upvotes + ', Downvotes: ' + teams[i].downvotes
@@ -153,15 +159,11 @@ function init() {
         			}        			
         		}
         	}
-        })(marker, i));
-
-        // Automatically center the map fitting all markers on the screen
-        map.fitBounds(bounds);
+        })(marker, i));        
     }
 
-    // Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
     var boundsListener = google.maps.event.addListener((map), 'bounds_changed', function(event) {
-    	this.setZoom(14);
+    	this.setZoom(zoomLevel);
     	google.maps.event.removeListener(boundsListener);
     });
     

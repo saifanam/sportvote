@@ -35,6 +35,14 @@ body {
   height: 100%;
 }
 
+.team-label {
+  position: absolute;
+  top: 0;
+  color: red;
+  width: 30px;
+  background-color: red;
+}
+
 #team-overlay {
   width: 100%;
   height: 100%;
@@ -48,6 +56,7 @@ body {
   transition: opacity 0.5s ease-in-out;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 #team-overlay.open {
